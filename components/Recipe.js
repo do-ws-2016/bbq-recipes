@@ -4,7 +4,14 @@ import { Ionicons as Icon } from '@expo/vector-icons';
 // import Sound from 'react-native-sound';
 import { KeepAwake } from 'expo';
 
-import { View, Dimensions, Animated, Alert, Vibration } from 'react-native';
+import {
+  View,
+  Dimensions,
+  Animated,
+  Alert,
+  Vibration,
+  Platform,
+} from 'react-native';
 import { Scroll, Row } from './index';
 import { media } from '../utils';
 
@@ -91,7 +98,7 @@ const ButtonText = styled(Center)`
   return 'rgb(0, 122, 255)';
 }};
   font-size: 25;
-  font-family: Courier New;
+  font-family: ${() => Platform.OS === 'ios' ? 'Courier New' : 'monospace'};
   margin:5;
 `;
 const Label = styled(Text)`
