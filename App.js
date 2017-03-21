@@ -1,7 +1,7 @@
 import React from 'react';
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
 import { connect } from 'react-redux';
-import { AppRegistry, Text, View, Button } from 'react-native';
+import { AppRegistry, Text, View, Button, Platform } from 'react-native';
 import { StackNavigator, addNavigationHelpers } from 'react-navigation';
 import { Cookbooks, Cookbook, Recipe, Header } from './containers';
 import {
@@ -9,7 +9,9 @@ import {
   ApolloProvider,
   createNetworkInterface,
 } from 'react-apollo';
-
+const headerStyle = {
+  marginTop: Platform.OS === 'android' ? 24 : 0,
+};
 const Navigator = StackNavigator(
   {
     Cookbooks: {
@@ -18,6 +20,7 @@ const Navigator = StackNavigator(
         header: ({ state }) => ({
           backTitle: 'Cookbooks',
           title: <Header.Cookbooks data={{ header: { title: 'Cookbooks' } }} />,
+          style: headerStyle,
         }),
       },
     },
@@ -27,6 +30,7 @@ const Navigator = StackNavigator(
         header: ({ state }) => ({
           backTitle: 'Cookbook',
           title: <Header.Cookbook id={state.params.cookbook._id} />,
+          style: headerStyle,
         }),
       },
     },
@@ -35,6 +39,7 @@ const Navigator = StackNavigator(
       navigationOptions: {
         header: ({ state }) => ({
           title: <Header.Recipe id={state.params.recipe._id} />,
+          style: headerStyle,
         }),
       },
     },
