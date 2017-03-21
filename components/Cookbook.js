@@ -21,7 +21,7 @@ const renderRow = navigate =>
     />
   );
 
-export default class Cookbooks extends React.Component {
+export default class Cookbook extends React.Component {
   render() {
     const { navigate } = this.props.navigation;
     const { data } = this.props;

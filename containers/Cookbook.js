@@ -5,6 +5,7 @@ import { withProps, compose } from 'recompose';
 const Query = gql`
   query cookbook($id: ID!) {
     cookbook: Cookbook(id: $id) {
+      title
       recipes {
         _id: id
         title

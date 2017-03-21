@@ -2,6 +2,7 @@ import React from 'react';
 import { PixelRatio, View } from 'react-native';
 import styled from 'styled-components/native';
 import { LinearGradient } from 'expo';
+import { throttle } from 'lodash';
 const Row = styled.TouchableHighlight`
   background-color: white;
   border-bottom-width: ${1 / PixelRatio.get()};
@@ -50,7 +51,16 @@ const Subtitle = styled.Text`
 const tagToString = (prev, current) => `${prev} #${current}`;
 
 export default props => (
-  <Row {...props}>
+  <Row
+    {...props}
+    onPress={
+      props.onPress &&
+        throttle(props.onPress, 300, {
+          leading: true,
+          trailing: false,
+        })
+    }
+  >
     <Container>
       <Title dark={!!props.source}>{props.title}</Title>
       <Subtitle dark={!!props.source}>
