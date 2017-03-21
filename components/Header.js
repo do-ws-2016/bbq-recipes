@@ -9,6 +9,7 @@ const HeaderTitle = styled.Text`
     color: rgba(0, 0, 0, .9);
     background-color: ${props => props.os === 'ios' ? '#EFEFF2' : '#FFF'};
     margin: 16 0;
+    width: 100%;
 `;
 const Header = props => (
   <HeaderTitle os={Platform.OS}>
