@@ -8,10 +8,7 @@ import { View, Dimensions, Animated, Alert, Vibration } from 'react-native';
 import { Scroll, Row } from './index';
 import { media } from '../utils';
 
-const { height, width } = Dimensions.get('window');
 const HEIGHT = 85;
-const WIDTH = Math.max(height, width);
-const getImage = media(WIDTH, HEIGHT);
 
 const Button = styled.TouchableHighlight`
   flex: ${({ flex }) => flex};
@@ -361,7 +358,15 @@ const renderContent = (updateRoute, task, ticks) =>
         title={recipe.description}
         author={recipe.author.username}
         tags={recipe.tags}
-        source={recipe.thumbnail ? { uri: getImage(recipe.thumbnail) } : null}
+        source={
+          recipe.thumbnail
+            ? {
+                uri: media(Dimensions.get('window').width, HEIGHT)(
+                  recipe.thumbnail
+                ),
+              }
+            : null
+        }
       />
       <Sequence
         sequence={recipe.sequence}

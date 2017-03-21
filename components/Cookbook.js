@@ -3,10 +3,7 @@ import { Dimensions } from 'react-native';
 import { List, Row } from './index';
 import { media } from '../utils';
 
-const { height, width } = Dimensions.get('window');
 const HEIGHT = 85;
-const WIDTH = Math.max(height, width);
-const getImage = media(WIDTH, HEIGHT);
 
 const renderRow = navigate =>
   recipe => (
@@ -15,7 +12,15 @@ const renderRow = navigate =>
       underlayColor="#D0D0D0"
       height={HEIGHT}
       title={recipe.title}
-      source={recipe.thumbnail ? { uri: getImage(recipe.thumbnail) } : null}
+      source={
+        recipe.thumbnail
+          ? {
+              uri: media(Dimensions.get('window').width, HEIGHT)(
+                recipe.thumbnail
+              ),
+            }
+          : null
+      }
       author={recipe.author.username}
       tags={recipe.tags}
     />
