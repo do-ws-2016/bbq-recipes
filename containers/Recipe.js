@@ -12,7 +12,7 @@ const Query = gql`
         username
       }
       tags
-      sequence {
+      sequence(orderBy:position_ASC) {
         title
         duration
         intensity
