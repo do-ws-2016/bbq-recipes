@@ -1,6 +1,13 @@
 import React from 'react';
 import styled from 'styled-components/native';
-import { View, ListView, PixelRatio, RefreshControl } from 'react-native';
+import { Scroll } from './index';
+import {
+  View,
+  ListView,
+  PixelRatio,
+  RefreshControl,
+  NetInfo,
+} from 'react-native';
 
 import { Spinner } from './index';
 
@@ -20,7 +27,22 @@ const renderLoading = () => null;
 
 const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
-export default ({ data, renderRow, loading, onRefresh, error }) => {
+export default ({ data, renderRow, loading, onRefresh, error }, props) => {
+  const handleFirstConnectivityChange = isConnected => {
+    if (isConnected) {
+      onRefresh();
+    }
+    NetInfo.isConnected.removeEventListener(
+      'change',
+      handleFirstConnectivityChange
+    );
+  };
+  const safeRefresh = () => {
+    NetInfo.isConnected.addEventListener(
+      'change',
+      handleFirstConnectivityChange
+    );
+  };
   if (!error) {
     return (
       <List
@@ -28,15 +50,18 @@ export default ({ data, renderRow, loading, onRefresh, error }) => {
         dataSource={data ? ds.cloneWithRows(data) : ds}
         renderRow={data ? renderRow : renderLoading}
         refreshControl={
-          <RefreshControl refreshing={loading} onRefresh={onRefresh} />
+          <RefreshControl refreshing={loading} onRefresh={safeRefresh} />
         }
       />
     );
   } else {
     return (
-      <ConnectionError>
-        <Text>An error while connecting occured</Text>
-      </ConnectionError>
+      <Scroll
+        loading={loading}
+        error={error}
+        data={data}
+        onRefresh={onRefresh}
+      />
     );
   }
 };

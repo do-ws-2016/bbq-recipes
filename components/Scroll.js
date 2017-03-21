@@ -1,6 +1,12 @@
 import React from 'react';
 import styled from 'styled-components/native';
-import { View, ScrollView, PixelRatio, RefreshControl } from 'react-native';
+import {
+  View,
+  ScrollView,
+  PixelRatio,
+  RefreshControl,
+  NetInfo,
+} from 'react-native';
 
 import { Spinner } from './index';
 
@@ -9,6 +15,7 @@ const Scroll = styled(ScrollView)`
   overflow: visible;
 `;
 const ConnectionError = styled.View`
+  margin-top: 40;
   flex-direction: row;
   justify-content: center;
 `;
@@ -17,21 +24,32 @@ const Text = styled.Text`
 `;
 
 export default ({ loading, onRefresh, error, renderContent, data }) => {
-  if (!error) {
-    return (
-      <Scroll
-        refreshControl={
-          <RefreshControl refreshing={loading} onRefresh={onRefresh} />
-        }
-      >
-        {data && renderContent(data)}
-      </Scroll>
+  const handleFirstConnectivityChange = isConnected => {
+    if (isConnected) {
+      onRefresh();
+    }
+    NetInfo.isConnected.removeEventListener(
+      'change',
+      handleFirstConnectivityChange
     );
-  } else {
-    return (
-      <ConnectionError>
-        <Text>An error while connecting occured</Text>
-      </ConnectionError>
+  };
+  const safeRefresh = () => {
+    NetInfo.isConnected.addEventListener(
+      'change',
+      handleFirstConnectivityChange
     );
-  }
+  };
+  return (
+    <Scroll
+      refreshControl={
+        <RefreshControl refreshing={loading} onRefresh={safeRefresh} />
+      }
+    >
+      {!error
+        ? data && renderContent(data)
+        : <ConnectionError>
+            <Text>An error while connecting occured</Text>
+          </ConnectionError>}
+    </Scroll>
+  );
 };

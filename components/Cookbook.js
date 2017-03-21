@@ -23,12 +23,11 @@ const renderRow = navigate =>
 
 export default class Cookbooks extends React.Component {
   render() {
-    console.log(this.props);
     const { navigate } = this.props.navigation;
     const { data } = this.props;
     return (
       <List
-        data={!data.loading && data.cookbook.recipes}
+        data={data.cookbook ? data.cookbook.recipes : null}
         renderRow={renderRow(navigate)}
         loading={data.loading}
         error={data.error}
